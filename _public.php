@@ -29,15 +29,15 @@ class tplBreadcrumb
 	public static function displayBreadcrumb($separator = ' &rsaquo; ')
 	{
 		$ret = '';
-
+		
 		switch ($core->url->type) {
-
+			
 			case 'default':
 			case 'default-page':
 				// Home
 				$ret = __('Home');
 				break;
-
+				
 			case 'category':
 				// Category
 				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
@@ -47,15 +47,39 @@ class tplBreadcrumb
 				}
 				$ret .= $separator.$_ctx->categories->cat_title;
 				break;
-
+				
 			case 'post':
 				// Post
 				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
-				$categories = $core->blog->getCategoryParents($_ctx->posts->cat_id);
-				while ($categories->fetch()) {
+				if ($_ctx->posts->cat_id) {
+					// Parents cats of post's cat
+					$categories = $core->blog->getCategoryParents($_ctx->posts->cat_id);
+					while ($categories->fetch()) {
+						$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase('category')."/".$categories->cat_url.'">'.$categories->cat_title.'</a>';
+					}
+					// Post's cat
+					$categories = $core->blog->getCategory($_ctx->posts->cat_id);
 					$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase('category')."/".$categories->cat_url.'">'.$categories->cat_title.'</a>';
 				}
 				$ret .= $separator.$_ctx->posts->post_title;
+				break;
+				
+			case 'lang':
+				break;
+				
+			case 'archive':
+				break;
+				
+			case 'pages':
+				break;
+				
+			case 'tags':
+				break;
+				
+			case 'search':
+				break;
+				
+			case '404':
 				break;
 				
 			default:
@@ -72,6 +96,7 @@ class tplBreadcrumb
 		if ($ret != '') {
 			$ret = '<p id="breadcrumb">'.$ret.'</p>';
 		} else {
+			# Pour tests seulement
 			$ret = '<p id="breadcrumb">'.$core->url->type.'</p>';
 		}
 		
