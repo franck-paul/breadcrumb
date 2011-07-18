@@ -12,23 +12,26 @@
 if (!defined('DC_RC_PATH')) { return; }
 
 # Breadcrumb template functions
-$core->tpl->addValue('Breadcrumb',array('tplBreadcrumb','breadrumb'));
+$core->tpl->addValue('Breadcrumb',array('tplBreadcrumb','breadcrumb'));
 
 class tplBreadcrumb
 {
 	# Template function
 	public static function breadcrumb($attr)
 	{
-		$class = isset($attr['separator']) ? trim($attr['separator']) : '';
+		$separator = isset($attr['separator']) ? trim($attr['separator']) : '';
 		
 		return '<?php echo tplBreadcrumb::displayBreadcrumb('.
 				"'".addslashes($separator)."'".
 			'); ?>';
 	}
 	
-	public static function displayBreadcrumb($separator = ' &rsaquo; ')
+	public static function displayBreadcrumb($separator)
 	{
+		global $core,$_ctx;
+		
 		$ret = '';
+		if ($separator == '') $separator = ' &rsaquo; ';
 		
 		switch ($core->url->type) {
 			
@@ -65,39 +68,69 @@ class tplBreadcrumb
 				break;
 				
 			case 'lang':
+				// Lang
+				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$langs = l10n::getISOCodes();
+				$ret .= $separator.(isset($langs[$_ctx->cur_lang]) ? $langs[$_ctx->cur_lang] : $_ctx->cur_lang);
 				break;
 				
 			case 'archive':
+				// Archives
+				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				if (!$_ctx->archives) {
+					// Global archives
+					$ret .= $separator.__('Archives');
+				} else {
+					// Month archive
+					$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase("archive").'">'.__('Archives').'</a>';
+					$ret .= $separator.dt::dt2str('%B %Y',$_ctx->archives->dt);
+				}
 				break;
 				
 			case 'pages':
+				// Page
+				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret .= $separator.$_ctx->posts->post_title;
 				break;
 				
 			case 'tags':
+				// All tags
+				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret .= $separator.__('All tags');
 				break;
 				
+			case 'tag':
+				// Tag
+				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase("tags").'">'.__('All tags').'</a>';
+				$ret .= $separator.$_ctx->meta->meta_id;
+				break;
+
 			case 'search':
+				// Search
+				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret .= $separator.__('Search:').' '.$GLOBALS['_search'];
 				break;
 				
 			case '404':
+				// 404
+				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret .= $separator.__('404');
 				break;
 				
 			default:
-				$special = '';
+				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
 				# --BEHAVIOR-- publicBreadcrumb
-				# Should return $special filled with specific breadcrumb, will be added after home page url
-				$core->callBehavior('publicBreadcrumb',$core->url->type,$separator,$special);
+				# Should specific breadcrumb if any, will be added after home page url
+				$special = $core->callBehavior('publicBreadcrumb',$core->url->type,$separator);
 				if ($special) {
-					$ret = $ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>'.$separator.$special;
+					$ret .= $separator.$special;
 				}
 				break;
 		}
 		
 		if ($ret != '') {
 			$ret = '<p id="breadcrumb">'.$ret.'</p>';
-		} else {
-			# Pour tests seulement
-			$ret = '<p id="breadcrumb">'.$core->url->type.'</p>';
 		}
 		
 		return $ret;

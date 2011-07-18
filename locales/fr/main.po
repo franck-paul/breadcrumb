@@ -1,0 +1,5 @@
+msgid "Search:"
+msgstr "Recherche :"
+
+msgid "404"
+msgstr "404"
