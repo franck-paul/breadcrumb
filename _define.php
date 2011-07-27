@@ -15,6 +15,6 @@ $this->registerModule(
 	/* Name */			"Breadcrumb",
 	/* Description*/		"Breadcrumb for Dotclear",
 	/* Author */			"Franck Paul",
-	/* Version */			'0.1'
+	/* Version */			'0.2'
 );
 ?>

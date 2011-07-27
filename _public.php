@@ -129,10 +129,6 @@ class tplBreadcrumb
 				break;
 		}
 		
-		if ($ret != '') {
-			$ret = '<p id="breadcrumb">'.$ret.'</p>';
-		}
-		
 		return $ret;
 	}
 }
