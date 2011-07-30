@@ -19,7 +19,7 @@ class tplBreadcrumb
 	# Template function
 	public static function breadcrumb($attr)
 	{
-		$separator = isset($attr['separator']) ? trim($attr['separator']) : '';
+		$separator = isset($attr['separator']) ? $attr['separator'] : '';
 		
 		return '<?php echo tplBreadcrumb::displayBreadcrumb('.
 				"'".addslashes($separator)."'".
@@ -36,14 +36,19 @@ class tplBreadcrumb
 		switch ($core->url->type) {
 			
 			case 'default':
+				// Home (first page only)
+				$ret = '<span id="bc-home">'.__('Home').'</span>';
+				break;
+				
 			case 'default-page':
-				// Home
-				$ret = __('Home');
+				// Home`(page 2 to n)
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret .= $separator.sprintf(__('page %d'),$GLOBALS['_page_number']);
 				break;
 				
 			case 'category':
 				// Category
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$categories = $core->blog->getCategoryParents($_ctx->categories->cat_id);
 				while ($categories->fetch()) {
 					$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase('category')."/".$categories->cat_url.'">'.$categories->cat_title.'</a>';
@@ -53,7 +58,7 @@ class tplBreadcrumb
 				
 			case 'post':
 				// Post
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				if ($_ctx->posts->cat_id) {
 					// Parents cats of post's cat
 					$categories = $core->blog->getCategoryParents($_ctx->posts->cat_id);
@@ -69,14 +74,14 @@ class tplBreadcrumb
 				
 			case 'lang':
 				// Lang
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$langs = l10n::getISOCodes();
 				$ret .= $separator.(isset($langs[$_ctx->cur_lang]) ? $langs[$_ctx->cur_lang] : $_ctx->cur_lang);
 				break;
 				
 			case 'archive':
 				// Archives
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				if (!$_ctx->archives) {
 					// Global archives
 					$ret .= $separator.__('Archives');
@@ -89,37 +94,37 @@ class tplBreadcrumb
 				
 			case 'pages':
 				// Page
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.$_ctx->posts->post_title;
 				break;
 				
 			case 'tags':
 				// All tags
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.__('All tags');
 				break;
 				
 			case 'tag':
 				// Tag
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase("tags").'">'.__('All tags').'</a>';
 				$ret .= $separator.$_ctx->meta->meta_id;
 				break;
 
 			case 'search':
 				// Search
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.__('Search:').' '.$GLOBALS['_search'];
 				break;
 				
 			case '404':
 				// 404
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.__('404');
 				break;
 				
 			default:
-				$ret = '<a href="'.$core->blog->url.'">'.__('Home').'</a>';
+				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				# --BEHAVIOR-- publicBreadcrumb
 				# Should specific breadcrumb if any, will be added after home page url
 				$special = $core->callBehavior('publicBreadcrumb',$core->url->type,$separator);

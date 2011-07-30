@@ -3,3 +3,6 @@ msgstr "Search:"
 
 msgid "404"
 msgstr "404"
+
+msgid "page %d"
+msgstr "page %d"
