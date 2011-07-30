@@ -33,6 +33,9 @@ class tplBreadcrumb
 		$ret = '';
 		if ($separator == '') $separator = ' &rsaquo; ';
 		
+		// Get current page if set
+		$page = isset($GLOBALS['_page_number']) ? (integer) $GLOBALS['_page_number'] : 0;
+		
 		switch ($core->url->type) {
 			
 			case 'default':
@@ -43,7 +46,7 @@ class tplBreadcrumb
 			case 'default-page':
 				// Home`(page 2 to n)
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
-				$ret .= $separator.sprintf(__('page %d'),$GLOBALS['_page_number']);
+				$ret .= $separator.sprintf(__('page %d'),$page);
 				break;
 				
 			case 'category':
@@ -53,7 +56,12 @@ class tplBreadcrumb
 				while ($categories->fetch()) {
 					$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase('category')."/".$categories->cat_url.'">'.$categories->cat_title.'</a>';
 				}
-				$ret .= $separator.$_ctx->categories->cat_title;
+				if ($page == 0) {
+					$ret .= $separator.$_ctx->categories->cat_title;
+				} else {
+					$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase('category')."/".$_ctx->categories->cat_url.'">'.$_ctx->categories->cat_title.'</a>';
+					$ret .= $separator.sprintf(__('page %d'),$page);
+				}
 				break;
 				
 			case 'post':
@@ -108,13 +116,23 @@ class tplBreadcrumb
 				// Tag
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase("tags").'">'.__('All tags').'</a>';
-				$ret .= $separator.$_ctx->meta->meta_id;
+				if ($page == 0) {
+					$ret .= $separator.$_ctx->meta->meta_id;
+				} else {
+					$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase("tags").'/'.rawurlencode($_ctx->meta->meta_id).'">'.$_ctx->meta->meta_id.'</a>';
+					$ret .= $separator.sprintf(__('page %d'),$page);
+				}
 				break;
 
 			case 'search':
 				// Search
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
-				$ret .= $separator.__('Search:').' '.$GLOBALS['_search'];
+				if ($page == 0) {
+					$ret .= $separator.__('Search:').' '.$GLOBALS['_search'];
+				} else {
+					$ret .= $separator.'<a href="'.$core->blog->url.'?q='.rawurlencode($GLOBALS['_search']).'">'.__('Search:').' '.$GLOBALS['_search'].'</a>';
+					$ret .= $separator.sprintf(__('page %d'),$page);
+				}
 				break;
 				
 			case '404':
