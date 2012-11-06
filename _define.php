@@ -12,8 +12,8 @@
 if (!defined('DC_RC_PATH')) { return; }
 
 $this->registerModule(
-	/* Name */				__("Breadcrumb"),
-	/* Description*/		__("Breadcrumb for Dotclear"),
+	/* Name */			"Breadcrumb",
+	/* Description*/		"Breadcrumb for Dotclear",
 	/* Author */			"Franck Paul",
 	/* Version */			'0.3'
 );
