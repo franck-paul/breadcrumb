@@ -21,35 +21,35 @@ class tplBreadcrumb
 	public static function breadcrumb($attr)
 	{
 		$separator = isset($attr['separator']) ? $attr['separator'] : '';
-		
+
 		return '<?php echo tplBreadcrumb::displayBreadcrumb('.
 				"'".addslashes($separator)."'".
 			'); ?>';
 	}
-	
+
 	public static function displayBreadcrumb($separator)
 	{
 		global $core,$_ctx;
-		
+
 		$ret = '';
 		if ($separator == '') $separator = ' &rsaquo; ';
-		
+
 		// Get current page if set
 		$page = isset($GLOBALS['_page_number']) ? (integer) $GLOBALS['_page_number'] : 0;
-		
+
 		switch ($core->url->type) {
-			
+
 			case 'default':
 				// Home (first page only)
 				$ret = '<span id="bc-home">'.__('Home').'</span>';
 				break;
-				
+
 			case 'default-page':
 				// Home`(page 2 to n)
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.sprintf(__('page %d'),$page);
 				break;
-				
+
 			case 'category':
 				// Category
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
@@ -64,7 +64,7 @@ class tplBreadcrumb
 					$ret .= $separator.sprintf(__('page %d'),$page);
 				}
 				break;
-				
+
 			case 'post':
 				// Post
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
@@ -80,14 +80,14 @@ class tplBreadcrumb
 				}
 				$ret .= $separator.$_ctx->posts->post_title;
 				break;
-				
+
 			case 'lang':
 				// Lang
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$langs = l10n::getISOCodes();
 				$ret .= $separator.(isset($langs[$_ctx->cur_lang]) ? $langs[$_ctx->cur_lang] : $_ctx->cur_lang);
 				break;
-				
+
 			case 'archive':
 				// Archives
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
@@ -100,19 +100,19 @@ class tplBreadcrumb
 					$ret .= $separator.dt::dt2str('%B %Y',$_ctx->archives->dt);
 				}
 				break;
-				
+
 			case 'pages':
 				// Page
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.$_ctx->posts->post_title;
 				break;
-				
+
 			case 'tags':
 				// All tags
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.__('All tags');
 				break;
-				
+
 			case 'tag':
 				// Tag
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
@@ -135,13 +135,13 @@ class tplBreadcrumb
 					$ret .= $separator.sprintf(__('page %d'),$page);
 				}
 				break;
-				
+
 			case '404':
 				// 404
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				$ret .= $separator.__('404');
 				break;
-				
+
 			default:
 				$ret = '<a id="bc-home" href="'.$core->blog->url.'">'.__('Home').'</a>';
 				# --BEHAVIOR-- publicBreadcrumb
@@ -152,9 +152,8 @@ class tplBreadcrumb
 				}
 				break;
 		}
-		
+
 		return $ret;
 	}
 }
-
 ?>
