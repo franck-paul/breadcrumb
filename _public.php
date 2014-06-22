@@ -120,7 +120,7 @@ class tplBreadcrumb
 				if ($page == 0) {
 					$ret .= $separator.$_ctx->meta->meta_id;
 				} else {
-					$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase("tags").'/'.rawurlencode($_ctx->meta->meta_id).'">'.$_ctx->meta->meta_id.'</a>';
+					$ret .= $separator.'<a href="'.$core->blog->url.$core->url->getBase("tag").'/'.rawurlencode($_ctx->meta->meta_id).'">'.$_ctx->meta->meta_id.'</a>';
 					$ret .= $separator.sprintf(__('page %d'),$page);
 				}
 				break;
