@@ -32,6 +32,13 @@ class tplBreadcrumb
 		global $core,$_ctx;
 
 		$ret = '';
+
+		# Check if breadcrumb enabled for the current blog
+		$core->blog->settings->addNameSpace('breadcrumb');
+		if (!$core->blog->settings->breadcrumb->breadcrumb_enabled) {
+			return $ret;
+		}
+
 		if ($separator == '') $separator = ' &rsaquo; ';
 
 		// Get current page if set
@@ -151,6 +158,11 @@ class tplBreadcrumb
 					$ret .= $separator.$special;
 				}
 				break;
+		}
+
+		# Encapsulate breadcrumb in <p>…</p>
+		if (!$core->blog->settings->breadcrumb->breadcrumb_alone) {
+			$ret = '<p id="breadcrumb">'.$ret.'</p>';
 		}
 
 		return $ret;
