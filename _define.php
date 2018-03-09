@@ -1,24 +1,25 @@
 <?php
-# -- BEGIN LICENSE BLOCK ----------------------------------
-# This file is part of breadcrumb, a plugin for Dotclear 2.
-#
-# Copyright (c) Franck Paul and contributors
-# carnet.franck.paul@gmail.com
-#
-# Licensed under the GPL version 2.0 license.
-# A copy of this license is available in LICENSE file or at
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-# -- END LICENSE BLOCK ------------------------------------
+/**
+ * @brief breadcrumb, a plugin for Dotclear 2
+ *
+ * @package Dotclear
+ * @subpackage Plugins
+ *
+ * @author Franck Paul and contributors
+ *
+ * @copyright Franck Paul carnet.franck.paul@gmail.com
+ * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 
-if (!defined('DC_RC_PATH')) { return; }
+if (!defined('DC_RC_PATH')) {return;}
 
 $this->registerModule(
-	/* Name */			"Breadcrumb",
-	/* Description*/		"Breadcrumb for Dotclear",
-	/* Author */			"Franck Paul",
-	/* Version */			'0.6.1',
-	array(
-		/* Permissions */	'permissions' =>	'usage,contentadmin',
-		/* Type */			'type' =>			'plugin'
-	)
+    "Breadcrumb",              // Name
+    "Breadcrumb for Dotclear", // Description
+    "Franck Paul",             // Author
+    '0.6.1',                   // Version
+    array(
+        'permissions' => 'usage,contentadmin', // Permissions
+        'type'        => 'plugin'             // Type
+    )
 );
